@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+</head>
+<body>
+    <h2>메인 페이지</h2>
+    {% if user.is_authenticated %}
+        <button type="button" onclick="location.href='{% url 'login' %}'">로그아웃</button>
+        <button type="button" onclick="location.href='{% url 'change_password' %}'">비밀번호 변경</button>
+    {% else %}
+        <button type="button" onclick="location.href='{% url 'signup' %}'">회원가입</button>
+        <button type="button" onclick="location.href='{% url 'login' %}'">로그인</button>
+    {% endif %}
+
+    {% if messages %}
+        <script>
+            {% for message in messages %}
+                alert('{{ message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</body>
+</html>
