@@ -14,7 +14,7 @@ def signup_view(request):
             return redirect('login')
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'user/signup.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
@@ -26,7 +26,7 @@ def login_view(request):
     else:
         form = LoginForm()
         
-    return render(request, 'login.html', {'form' : form})
+    return render(request, 'user/login.html', {'form' : form})
 
 def logout_view(request):
     logout(request)
@@ -34,3 +34,18 @@ def logout_view(request):
 
 def main_view(request):
     return render(request, 'main.html')
+
+def change_password_view(request):
+    if request.method == "POST" :
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Password successfully changed')
+            return redirect('main')
+        else:
+            messages.error(request, 'Password not changed')
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    return render(request, 'user/change_password.html', {'form' : form})
