@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     # 생성한 앱 이름 추가
-    "user"
+    "user",
+    "post"      # week03
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,6 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # 추가 로그 출력
 EMAIL_USE_LOCALTIME = True
 
+# 게시판 사진 등록
+MEDIA_URL= '/media'
+MEDIA_ROOT= BASE_DIR / 'media'

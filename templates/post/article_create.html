@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시물 작성하기</title>
+    <style>
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>게시물 작성하기</h2>
+    <form method = "post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">게시물 등록하기</button>
+    </form>
+    <br/>
+
+    <div class="button-group">
+        <button type="button" onclick="location.href='{% url 'main' %}'">메인으로</button>
+        <button type="button" onclick="location.href='{% url 'login' %}'">로그아웃</button>
+    </div>
+    
+</body>
+</html>

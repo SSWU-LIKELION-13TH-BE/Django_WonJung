@@ -1,0 +1,25 @@
+from django.db import models
+from django.contrib.auth import get_user_model
+from multiselectfield import MultiSelectField
+
+User = get_user_model()
+
+TECH_STACKS = (
+    ('Python', 'Python'),
+    ('SpringBoot', 'SpringBoot'),
+    ('Node.js', 'Node.js'),
+    ('React', 'React'),
+    ('TypeScript', 'TypeScript'),
+    ('Kotlin', 'Kotlin'),
+    ('Flutter', 'Flutter'),
+    ('HTML/CSS/JS', 'HTML/CSS/JS'),
+    ('MySQL', 'MySQL'),
+)
+
+class Articles(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles', null=False, blank=False)
+    title = models.CharField(max_length=100, blank=False)
+    content = models.TextField()
+    photo = models.ImageField(upload_to='articles/photos/', blank=True)
+    tech_stack = MultiSelectField(choices=TECH_STACKS, max_choices=9)
+    github_link = models.URLField(blank=True)

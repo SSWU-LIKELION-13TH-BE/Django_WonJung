@@ -17,10 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from user.views import main_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('user/', include('user.urls')),        # users 앱 URL 연결
+    path('post/', include('post.urls')),        # posts 앱 URL 연결
     path('', main_view, name='main'),
-    
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
