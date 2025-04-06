@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시물 보기</title>
+</head>
+<body>
+    <h2>게시글 목록</h2>
+    <ul>
+        {% for article in articles %}
+            <li>
+                <a href="{% url 'article_detail' article.pk %}">
+                    {{ article.title }} - {{ article.author.nickname }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <div class="button-group">
+        <button type="button" onclick="location.href='{% url 'signup' %}'">회원가입</button>
+        <button type="button" onclick="location.href='{% url 'password_reset' %}'">비밀번호 찾기</button>
+    </div>
+    
+</body>
+</html>
