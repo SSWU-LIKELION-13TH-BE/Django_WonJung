@@ -28,6 +28,42 @@
     
     <p>총 좋아요 수: {{ article.like_set.count }}</p>
 
+    <h3>댓글</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">댓글 작성</button>
+    </form>
+
+    <ul>
+        {% for comment in comments %}
+            <li>
+                <strong>{{ comment.author.nickname }}</strong>
+                <small>{{ comment.created_at|date:"Y.m.d H:i" }}</small><br>
+                {{ comment.content }}
+
+                <!-- 대댓글 폼 -->
+                <form method="POST" style="margin-left: 20px;">
+                    {% csrf_token %}
+                    <textarea name="content" rows="2" placeholder="답글 작성..."></textarea>
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                    <button type="submit">답글</button>
+                </form>
+
+                <!-- 대댓글 표시 -->
+                <ul>
+                    {% for reply in comment.replies.all %}
+                        <li style="margin-left: 20px;">
+                            <strong>{{ reply.author.nickname }}</strong>
+                            <small>{{ reply.created_at|date:"Y.m.d H:i" }}</small><br>
+                            {{ reply.content }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+
     <div class="button-group">
         <button type="button" onclick="location.href='{% url 'article_create' %}'">게시물 작성하기</button>
         <button type="button" onclick="location.href='{% url 'article_list' %}'">게시물 목록 보기</button>
