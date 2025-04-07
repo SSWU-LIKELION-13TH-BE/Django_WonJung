@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from myproject import settings
 from multiselectfield import MultiSelectField
 
 User = get_user_model()
@@ -23,3 +24,7 @@ class Articles(models.Model):
     photo = models.ImageField(upload_to='articles/photos/', blank=True)
     tech_stack = MultiSelectField(choices=TECH_STACKS, max_choices=9)
     github_link = models.URLField(blank=True)
+
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    article = models.ForeignKey(Articles, on_delete=models.CASCADE)

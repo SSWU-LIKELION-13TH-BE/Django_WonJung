@@ -15,9 +15,23 @@
     <p>기술 스택: {{ article.tech_stack }}</p>
     <p>깃허브 링크: <a href="{{ article.github_link }}">{{ article.github_link }}</a></p>
 
+    <form method="post" action="{% url 'like' article.pk %}">
+        {% csrf_token %}
+        {% if user.is_authenticated %}
+            {% if is_liked %}
+                <button type="submit">❤️ 좋아요 취소</button>
+            {% else %}
+                <button type="submit">🤍 좋아요</button>
+            {% endif %}
+        {% endif %}
+    </form>
+    
+    <p>총 좋아요 수: {{ article.like_set.count }}</p>
+
     <div class="button-group">
-        <button type="button" onclick="location.href='{% url 'signup' %}'">회원가입</button>
-        <button type="button" onclick="location.href='{% url 'password_reset' %}'">비밀번호 찾기</button>
+        <button type="button" onclick="location.href='{% url 'article_create' %}'">게시물 작성하기</button>
+        <button type="button" onclick="location.href='{% url 'article_list' %}'">게시물 목록 보기</button>
+        <button type="button" onclick="location.href='{% url 'main' %}'">메인으로</button>
     </div>
     
 </body>

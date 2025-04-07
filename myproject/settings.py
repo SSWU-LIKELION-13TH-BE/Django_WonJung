@@ -145,5 +145,5 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_USE_LOCALTIME = True
 
 # 게시판 사진 등록
-MEDIA_URL= '/media'
+MEDIA_URL= '/media/'
 MEDIA_ROOT= BASE_DIR / 'media'
