@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import Articles
+from .models import Articles, Comment
 
 class ArticleCreateForm(forms.ModelForm):
     class Meta:
@@ -11,4 +11,10 @@ class ArticleCreateForm(forms.ModelForm):
             'teck_stack' : forms.CheckboxSelectMultiple(),
         }
 
-    
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widget = {
+            'content' : forms.Textarea(attrs={'rows' : 3, 'placeholder' : '댓글을 입력해 주세요.'}),
+        }
