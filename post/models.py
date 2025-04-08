@@ -1,3 +1,4 @@
+from ast import mod
 from django.db import models
 from django.contrib.auth import get_user_model
 from myproject import settings
@@ -35,3 +36,13 @@ class Comment(models.Model):
     content = models.TextField()
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def like_count(self):
+        return self.likes.count()
+
+class CommentLike(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')
+
+    class Meta:
+        unique_together = ('user', 'comment')
