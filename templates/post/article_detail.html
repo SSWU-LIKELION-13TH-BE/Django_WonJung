@@ -35,12 +35,26 @@
         <button type="submit">댓글 작성</button>
     </form>
 
+    {% load dict_extras %}
     <ul>
         {% for comment in comments %}
             <li>
                 <strong>{{ comment.author.nickname }}</strong>
                 <small>{{ comment.created_at|date:"Y.m.d H:i" }}</small><br>
                 {{ comment.content }}
+
+                <!-- 댓글 좋아요 버튼 -->
+                <form action="{% url 'comment_like' comment.id %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">
+                        {% if comment.id in user_liked_comments %}
+                            ❤️
+                        {% else %}
+                            🤍
+                        {% endif %}
+                        {{ comment_likes|get_item:comment.id }}
+                    </button>
+                </form>
 
                 <!-- 대댓글 폼 -->
                 <form method="POST" style="margin-left: 20px;">
@@ -57,6 +71,19 @@
                             <strong>{{ reply.author.nickname }}</strong>
                             <small>{{ reply.created_at|date:"Y.m.d H:i" }}</small><br>
                             {{ reply.content }}
+
+                            <!-- 대댓글 좋아요 버튼 -->
+                            <form action="{% url 'comment_like' reply.id %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit">
+                                    {% if reply.id in user_liked_comments %}
+                                        ❤️
+                                    {% else %}
+                                        🤍
+                                    {% endif %}
+                                    {{ comment_likes|get_item:reply.id }}
+                                </button>
+                            </form>
                         </li>
                     {% endfor %}
                 </ul>
