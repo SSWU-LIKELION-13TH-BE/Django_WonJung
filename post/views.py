@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from .models import Articles, Comment, Like
+from .models import Articles, Comment, CommentLike, Like
 from .forms import ArticleCreateForm, CommentForm
 
 @login_required
@@ -30,6 +30,10 @@ def article_detail_view(request, pk):
     if request.user.is_authenticated:
         is_liked = Like.objects.filter(user=request.user, article=article).exists()
 
+    comment_likes = {}      # 댓글 좋아요 개수
+    for comment in article.comments.all():
+        comment_likes[comment.id] = comment.likes.count()
+
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -48,14 +52,12 @@ def article_detail_view(request, pk):
         'article': article,
         'is_liked': is_liked,
         'comments' : comments,
-        'form' : form
+        'form' : form,
+        'comment_likes': comment_likes,
     })
 
 def like_view(request, pk):
     if request.method == 'POST':
-        print("요청 도착 ✅")
-        print("로그인 여부:", request.user.is_authenticated)
-        print("사용자:", request.user)
         article = get_object_or_404(Articles, pk=pk)
         like, created = Like.objects.get_or_create(user = request.user, article=article)
 
@@ -63,3 +65,14 @@ def like_view(request, pk):
             like.delete()
 
         return redirect('article_detail', pk=pk)
+
+def comment_like_view(request, comment_id):
+    comment = get_object_or_404(Comment, id = comment_id)
+
+    if request.method == 'POST':
+        like, created = CommentLike.objects.get_or_create(user = request.user, comment=comment)
+
+        if not created:
+            like.delete()
+        
+        return redirect('article_detail', pk=comment.article.pk)
