@@ -111,18 +111,21 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'Asia/Seoul'  # 한국 시간 적용 
 
 USE_I18N = True
+USE_L10N = True
 
-USE_TZ = True
-
+# USE_TZ = True
+USE_TZ = False  # False 로 설정해야 DB에 변경 된 TIME_ZONE 이 반영 됨 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = "static/"
-
+import os
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # ✅ 당신 구조에 딱 맞는 설정
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
