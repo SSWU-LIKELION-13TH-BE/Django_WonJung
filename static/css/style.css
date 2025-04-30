@@ -1,0 +1,72 @@
+.detail-body {
+    text-align: center;
+    align-items: center;
+}
+
+.article-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px;
+}
+
+.article-header h2,
+.article-header .author {
+    margin: 4px;
+}
+
+.article-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px;
+}
+
+.article-content {
+    margin: 0 auto;
+    font-size: 16px;
+  }
+
+.like-button {
+    margin-right: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+  
+.like-button:hover {
+background-color: #f2f2f2;
+}
+
+.like-button.comment {
+    max-width: 120px;
+    margin-right: 8px;
+    padding: 3px 8px;
+    font-size: 12px;
+}
+
+.article-photo {
+    max-width: 300px;
+    border : 1px solid gray;
+}
+
+.search-bar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-bar form {
+    display: flex;
+    gap: 6px;
+}

@@ -46,3 +46,6 @@ class CommentLike(models.Model):
 
     class Meta:
         unique_together = ('user', 'comment')
+
+class Search(models.Model):
+    title = models.CharField(max_length=10)

@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from .models import Articles, Comment, CommentLike, Like
-from .forms import ArticleCreateForm, CommentForm
+from .forms import ArticleCreateForm, CommentForm, SearchForm
 
 @login_required
 def create_view(request):
@@ -76,3 +76,16 @@ def comment_like_view(request, comment_id):
             like.delete()
         
         return redirect('article_detail', pk=comment.article.pk)
+
+def article_list_view(request):
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        title = form.cleaned_data['title']
+        articles = Articles.objects.filter(title__icontains=title)
+    else:
+        articles = Articles.objects.all()
+    
+    return render(request, 'post/article_list.html', {
+        'articles': articles,
+        'form': form,
+    })
