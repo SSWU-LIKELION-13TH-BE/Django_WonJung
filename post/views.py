@@ -18,9 +18,12 @@ def create_view(request):
     return render(request, 'post/article_create.html', {'form': form})
 
 def article_list_view(request):
+    sort = request.GET.get('sort', 'recent')  # default값 : 최신순
+    query = ''
     articles = Articles.objects.all()
-    articles = Articles.objects.annotate(like_count=Count('like'))
+    # articles = Articles.objects.annotate(like_count=Count('like'))
 
+    # 게시물 검색 기능
     form = SearchForm(request.GET)
     if form.is_valid():
         title = form.cleaned_data['title']
@@ -28,9 +31,15 @@ def article_list_view(request):
     else:
         articles = Articles.objects.all()
     
+    if sort == 'popular':
+        articles = articles.annotate(like_count=Count('like')).order_by('-like_count', '-id')
+    else:  # 기본: 최신순
+        articles = articles.order_by('-id')
+
     return render(request, 'post/article_list.html', {
         'articles': articles,
-        'form': form,
+        'query': query,
+        'sort': sort,
     })
 
 def article_detail_view(request, pk):
