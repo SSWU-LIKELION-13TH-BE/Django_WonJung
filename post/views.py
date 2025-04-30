@@ -26,10 +26,9 @@ def article_list_view(request):
     # 게시물 검색 기능
     form = SearchForm(request.GET)
     if form.is_valid():
-        title = form.cleaned_data['title']
-        articles = Articles.objects.filter(title__icontains=title)
-    else:
-        articles = Articles.objects.all()
+        query = form.cleaned_data.get('title', '')
+        if query:
+            articles = articles.filter(title__icontains=query)
     
     if sort == 'popular':
         articles = articles.annotate(like_count=Count('like')).order_by('-like_count', '-id')
@@ -38,6 +37,7 @@ def article_list_view(request):
 
     return render(request, 'post/article_list.html', {
         'articles': articles,
+        'form' : form,
         'query': query,
         'sort': sort,
     })
