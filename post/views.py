@@ -31,7 +31,6 @@ def article_list_view(request):
     else:
         articles = Articles.objects.all()
     
-    # 정렬 적용
     if sort == 'popular':
         articles = articles.annotate(like_count=Count('like')).order_by('-like_count', '-id')
     else:  # 기본: 최신순
