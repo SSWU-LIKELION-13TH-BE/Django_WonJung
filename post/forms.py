@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-
-from .models import Articles, Comment
+from .models import Articles, Comment, Search
 
 class ArticleCreateForm(forms.ModelForm):
     class Meta:
@@ -18,3 +17,8 @@ class CommentForm(forms.ModelForm):
         widget = {
             'content' : forms.Textarea(attrs={'rows' : 3, 'placeholder' : '댓글을 입력해 주세요.'}),
         }
+
+class SearchForm(forms.ModelForm):
+    class Meta:
+        model = Search
+        fields = ['title']

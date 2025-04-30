@@ -1,95 +1,107 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>게시물 보기</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body>
-    <h2>게시물 보기</h2>
-    <h2>{{ article.title }}</h2>
-    <p>작성자: {{ article.author.nickname | default:"알 수 없음"}}</p>
-    <p>{{ article.content }}</p>
-    {% if article.photo %}
-        <img src="{{ article.photo.url }}" alt="사진" style="max-width: 300px;">
-    {% endif %}
-    <p>기술 스택: {{ article.tech_stack }}</p>
-    <p>깃허브 링크: <a href="{{ article.github_link }}">{{ article.github_link }}</a></p>
-
-    <form method="post" action="{% url 'like' article.pk %}">
-        {% csrf_token %}
-        {% if user.is_authenticated %}
-            {% if is_liked %}
-                <button type="submit">❤️ 좋아요 취소</button>
-            {% else %}
-                <button type="submit">🤍 좋아요</button>
-            {% endif %}
-        {% endif %}
-    </form>
+<body class="detail-body">
+    <div class="article-header">
+        <h2>📝 {{ article.title }}</h2>
+        <p class="author">✏️ 작성자 {{ article.author.nickname|default:"알 수 없음" }}</p>
+    </div>
+    <hr>
     
-    <p>총 좋아요 수: {{ article.like_set.count }}</p>
-
-    <h3>댓글</h3>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">댓글 작성</button>
-    </form>
-
-    {% load dict_extras %}
-    <ul>
-        {% for comment in comments %}
-            <li>
-                <strong>{{ comment.author.nickname }}</strong>
-                <small>{{ comment.created_at|date:"Y.m.d H:i" }}</small><br>
-                {{ comment.content }}
-
-                <!-- 댓글 좋아요 버튼 -->
-                <form action="{% url 'comment_like' comment.id %}" method="POST" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit">
-                        {% if comment.id in user_liked_comments %}
+    <div class="article">
+        <div class="article-body">
+            <p class="article-content">{{ article.content }}</p>
+            <form method="post" action="{% url 'like' article.pk %}" style="display: inline;">
+                {% csrf_token %}
+                {% if user.is_authenticated %}
+                    <button type="submit" class="like-button">
+                        {% if is_liked %}
                             ❤️
                         {% else %}
                             🤍
                         {% endif %}
-                        {{ comment_likes|get_item:comment.id }}
+                        {{ article.like_set.count }}
                     </button>
-                </form>
+                {% endif %}
+            </form>
+        </div>
 
-                <!-- 대댓글 폼 -->
-                <form method="POST" style="margin-left: 20px;">
-                    {% csrf_token %}
-                    <textarea name="content" rows="2" placeholder="답글 작성..."></textarea>
-                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                    <button type="submit">답글</button>
-                </form>
+        {% if article.photo %}
+            <img src="{{ article.photo.url }}" alt="사진" class="article-photo">
+        {% endif %}
+        <p>기술 스택: {{ article.tech_stack }}</p>
+        <p>깃허브 링크: <a href="{{ article.github_link }}">{{ article.github_link }}</a></p>
+    </div>
 
-                <!-- 대댓글 표시 -->
-                <ul>
-                    {% for reply in comment.replies.all %}
-                        <li style="margin-left: 20px;">
-                            <strong>{{ reply.author.nickname }}</strong>
-                            <small>{{ reply.created_at|date:"Y.m.d H:i" }}</small><br>
-                            {{ reply.content }}
+    <div class="comment">
+        <h3 class=comment-header>댓글</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">댓글 작성</button>
+        </form>
 
-                            <!-- 대댓글 좋아요 버튼 -->
-                            <form action="{% url 'comment_like' reply.id %}" method="POST" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit">
-                                    {% if reply.id in user_liked_comments %}
-                                        ❤️
-                                    {% else %}
-                                        🤍
-                                    {% endif %}
-                                    {{ comment_likes|get_item:reply.id }}
-                                </button>
-                            </form>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
+        {% load dict_extras %}
+        <ul>
+            {% for comment in comments %}
+                <div class="comment-area">
+                    <strong>{{ comment.author.nickname }}</strong>
+                    <small>{{ comment.created_at|date:"Y.m.d H:i" }}</small><br>
+                    {{ comment.content }}
+
+                    <!-- 댓글 좋아요 버튼 -->
+                    <form action="{% url 'comment_like' comment.id %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="like-button comment">
+                            {% if comment.id in user_liked_comments %}
+                                ❤️
+                            {% else %}
+                                🤍
+                            {% endif %}
+                            {{ comment_likes|get_item:comment.id }}
+                        </button>
+                    </form>
+
+                    <!-- 대댓글 폼 -->
+                    <form method="POST" style="margin-left: 20px;">
+                        {% csrf_token %}
+                        <textarea name="content" rows="2" placeholder="답글 작성..."></textarea>
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <button type="submit">답글</button>
+                    </form>
+
+                    <!-- 대댓글 표시 -->
+                    <ul>
+                        {% for reply in comment.replies.all %}
+                            <li style="margin-left: 20px;">
+                                <strong>{{ reply.author.nickname }}</strong>
+                                <small>{{ reply.created_at|date:"Y.m.d H:i" }}</small><br>
+                                {{ reply.content }}
+
+                                <!-- 대댓글 좋아요 버튼 -->
+                                <form action="{% url 'comment_like' reply.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="like-button comment">
+                                        {% if reply.id in user_liked_comments %}
+                                            ❤️
+                                        {% else %}
+                                            🤍
+                                        {% endif %}
+                                        {{ comment_likes|get_item:reply.id }}
+                                    </button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
 
     <div class="button-group">
         <button type="button" onclick="location.href='{% url 'article_create' %}'">게시물 작성하기</button>
