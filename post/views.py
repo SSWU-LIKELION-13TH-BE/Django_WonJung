@@ -20,7 +20,18 @@ def create_view(request):
 def article_list_view(request):
     articles = Articles.objects.all()
     articles = Articles.objects.annotate(like_count=Count('like'))
-    return render(request, 'post/article_list.html', {'articles' : articles})
+
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        title = form.cleaned_data['title']
+        articles = Articles.objects.filter(title__icontains=title)
+    else:
+        articles = Articles.objects.all()
+    
+    return render(request, 'post/article_list.html', {
+        'articles': articles,
+        'form': form,
+    })
 
 def article_detail_view(request, pk):
     article = get_object_or_404(Articles, pk=pk)
@@ -76,16 +87,3 @@ def comment_like_view(request, comment_id):
             like.delete()
         
         return redirect('article_detail', pk=comment.article.pk)
-
-def article_list_view(request):
-    form = SearchForm(request.GET)
-    if form.is_valid():
-        title = form.cleaned_data['title']
-        articles = Articles.objects.filter(title__icontains=title)
-    else:
-        articles = Articles.objects.all()
-    
-    return render(request, 'post/article_list.html', {
-        'articles': articles,
-        'form': form,
-    })
