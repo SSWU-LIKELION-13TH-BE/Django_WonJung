@@ -10,10 +10,6 @@
     margin: 16px;
 }
 
-.article-header h2,
-.article-header .author {
-    margin: 4px;
-}
 
 .article-body {
     display: flex;

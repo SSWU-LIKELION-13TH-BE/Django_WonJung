@@ -53,6 +53,10 @@ def article_detail_view(request, pk):
     comment_likes = {}      # 댓글 좋아요 개수
     for comment in article.comments.all():
         comment_likes[comment.id] = comment.likes.count()
+    
+    # 조회수 증가
+    article.views += 1
+    article.save(update_fields=['views'])
 
     if request.method == 'POST':
         form = CommentForm(request.POST)

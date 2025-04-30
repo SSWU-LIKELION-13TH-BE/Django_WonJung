@@ -25,6 +25,7 @@ class Articles(models.Model):
     photo = models.ImageField(upload_to='articles/photos/', blank=True)
     tech_stack = MultiSelectField(choices=TECH_STACKS, max_choices=9)
     github_link = models.URLField(blank=True)
+    views = models.PositiveIntegerField(default=0)      # 게시물 조회수
 
 class Like(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
