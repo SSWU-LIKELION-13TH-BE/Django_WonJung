@@ -8,8 +8,13 @@
 </head>
 <body class="detail-body">
     <div class="article-header">
-        <h2>📝 {{ article.title }}</h2>
-        <p class="author">✏️ 작성자 {{ article.author.nickname|default:"알 수 없음" }}</p>
+        <div class="post">
+            <h2 class="title">📝 {{ article.title }}</h2>
+            <p class="author">작성자 : {{ article.author.nickname|default:"알 수 없음" }}</p>
+        </div>
+        <div class="view">
+            <strong>조회수 :</strong> {{ article.views }}
+        </div>
     </div>
     <hr>
     
