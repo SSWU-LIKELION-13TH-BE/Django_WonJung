@@ -121,6 +121,6 @@ def article_delete_view(request, pk):
 
     if request.method == 'POST':
         article.delete()
-        return redirect('mypage')
+        return redirect('mypage')       # 삭제 후 mypage로 이동
     
-    return redirect('mypage')
+    return redirect('mypage')           # 잘못된 접근일 경우에도 mypage로 이동
