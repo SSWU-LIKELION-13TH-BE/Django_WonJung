@@ -6,13 +6,12 @@
 </head>
 <body>
     <h2>회원 정보 수정</h2>
-    <form method="post">
+
+    <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">비밀번호 변경하기</button>
+        <button type="submit">저장</button>
+        <button type="button" onclick="location.href='{% url 'mypage' %}'">마이페이지</button> 
     </form>
-
-    <button type="button" onclick="location.href='{% url 'main' %}'">메인으로</button>
-
 </body>
 </html>

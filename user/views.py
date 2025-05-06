@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 
 from post.models import Articles
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, UserUpdateForm
 from django.core.mail.message import EmailMessage
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -60,4 +60,12 @@ def mypage_view(request):
     return render(request, 'user/mypage.html', {'my_posts' : my_posts})
 
 def edit_profile_view(request):
-    return render(request, 'user/edit_profile.html')
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('mypage')
+    else:
+        form = UserUpdateForm(instance=request.user)
+
+    return render(request, 'user/edit_profile.html', {'form' : form})
