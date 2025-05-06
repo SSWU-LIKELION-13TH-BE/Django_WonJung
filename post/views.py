@@ -100,3 +100,27 @@ def comment_like_view(request, comment_id):
             like.delete()
         
         return redirect('article_detail', pk=comment.article.pk)
+
+# 게시물 수정
+def article_edit_view(request, pk):
+    article = get_object_or_404(Articles, pk=pk, author=request.user)
+
+    if request.method == 'POST':
+        form = ArticleCreateForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            form.save()
+            return redirect('mypage')       # 수정 후 mypage로 이동
+    else:
+        form = ArticleCreateForm(instance=article)
+    
+    return render(request, 'post/article_edit.html', {'form' : form })
+
+# 게시물 삭제
+def article_delete_view(request, pk):
+    article = get_object_or_404(Articles, pk=pk, author=request.user)
+
+    if request.method == 'POST':
+        article.delete()
+        return redirect('mypage')       # 삭제 후 mypage로 이동
+    
+    return redirect('mypage')           # 잘못된 접근일 경우에도 mypage로 이동

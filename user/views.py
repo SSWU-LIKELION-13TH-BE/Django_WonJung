@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from .forms import SignUpForm, LoginForm
+
+from post.models import Articles
+from .forms import SignUpForm, LoginForm, UserUpdateForm
 from django.core.mail.message import EmailMessage
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -49,3 +51,21 @@ def change_password_view(request):
         form = PasswordChangeForm(request.user)
     
     return render(request, 'user/change_password.html', {'form' : form})
+
+def mypage_view(request):
+    user = request.user
+
+    # 내가 올린 게시물 조회
+    my_posts = Articles.objects.filter(author=user).order_by('-id')     # 게시물은 최신순으로 정렬
+    return render(request, 'user/mypage.html', {'my_posts' : my_posts})
+
+def edit_profile_view(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('mypage')
+    else:
+        form = UserUpdateForm(instance=request.user)
+
+    return render(request, 'user/edit_profile.html', {'form' : form})
