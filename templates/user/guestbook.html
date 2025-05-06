@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ owner.nickname }}님의 방명록</title>
+</head>
+<body>
+    <h2>{{ owner.nickname }}님의 방명록</h2>
+
+    <!-- 방명록 목록 -->
+    <h3>방명록</h3>
+    {% if guestbooks %}
+        <ul>
+        {% for guestbook in guestbooks %}
+        <li>
+            <strong>
+                {% if guestbook.author %}
+                    {{ guestbook.author.nickname }}
+                {% else %}
+                    알 수 없음
+                {% endif %}
+            </strong>: {{ guestbook.message }}
+            <br>
+            <small>{{ guestbook.createdAt }}</small>
+        </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>방명록이 없습니다.</p>
+    {% endif %}
+
+
+    <!-- 방명록 작성 폼 -->
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">방명록 남기기</button>
+    </form>
+
+    <button type="button" onclick="location.href='{% url 'main' %}'">메인으로</button>
+</body>
+</html>

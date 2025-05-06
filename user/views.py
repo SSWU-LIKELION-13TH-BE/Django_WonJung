@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 
+from .models import CustomUser, Guestbook
 from post.models import Articles
-from .forms import SignUpForm, LoginForm, UserUpdateForm
+from .forms import GuestbookForm, SignUpForm, LoginForm, UserUpdateForm
 from django.core.mail.message import EmailMessage
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -69,3 +70,25 @@ def edit_profile_view(request):
         form = UserUpdateForm(instance=request.user)
 
     return render(request, 'user/edit_profile.html', {'form' : form})
+
+def guestbook_view(request, user_id):
+    
+    owner = get_object_or_404(CustomUser, id=user_id)
+    guestbooks = Guestbook.objects.filter(owner=owner)
+
+    if request.method == 'POST':
+        form = GuestbookForm(request.POST)
+        if form.is_valid():
+            entry = form.save(commit=False)
+            entry.owner = owner          # 수신자 지정
+            entry.author = request.user  # 작성자 지정
+            entry.save()
+            return redirect('guestbook', user_id=owner.id)
+    else:
+        form = GuestbookForm()
+
+    return render(request, 'user/guestbook.html', {
+        'form': form,
+        'owner': owner,
+        'guestbooks': guestbooks
+    })

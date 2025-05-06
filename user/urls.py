@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('mypage/', mypage_view, name='mypage'),
     path('edit_profile/', edit_profile_view, name='edit_profile'),
+    path('<str:user_id>/guestbook/', guestbook_view, name='guestbook'),
 
 
     # 비밀번호 재설정
