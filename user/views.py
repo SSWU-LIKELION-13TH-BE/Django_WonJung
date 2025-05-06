@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 
-from .models import CustomUser
+from .models import CustomUser, Guestbook
 from post.models import Articles
 from .forms import GuestbookForm, SignUpForm, LoginForm, UserUpdateForm
 from django.core.mail.message import EmailMessage
@@ -74,6 +74,7 @@ def edit_profile_view(request):
 def guestbook_view(request, user_id):
     
     owner = get_object_or_404(CustomUser, id=user_id)
+    guestbooks = Guestbook.objects.filter(owner=owner)
 
     if request.method == 'POST':
         form = GuestbookForm(request.POST)
@@ -88,5 +89,6 @@ def guestbook_view(request, user_id):
 
     return render(request, 'user/guestbook.html', {
         'form': form,
-        'owner': owner
+        'owner': owner,
+        'guestbooks': guestbooks
     })
