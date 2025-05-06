@@ -114,3 +114,13 @@ def article_edit_view(request, pk):
         form = ArticleCreateForm(instance=article)
     
     return render(request, 'post/article_edit.html', {'form' : form })
+
+# 게시물 삭제
+def article_delete_view(request, pk):
+    article = get_object_or_404(Articles, pk=pk, author=request.user)
+
+    if request.method == 'POST':
+        article.delete()
+        return redirect('mypage')
+    
+    return redirect('mypage')
