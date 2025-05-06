@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+
+from post.models import Articles
 from .forms import SignUpForm, LoginForm
 from django.core.mail.message import EmailMessage
 from django.contrib.auth.forms import PasswordChangeForm
@@ -51,7 +53,11 @@ def change_password_view(request):
     return render(request, 'user/change_password.html', {'form' : form})
 
 def mypage_view(request):
-    return render(request, 'user/mypage.html')
+    user = request.user
+
+    # 내가 올린 게시물 조회
+    my_posts = Articles.objects.filter(author=user).order_by('-id')     # 게시물은 최신순으로 정렬
+    return render(request, 'user/mypage.html', {'my_posts' : my_posts})
 
 def edit_profile_view(request):
     return render(request, 'user/edit_profile.html')

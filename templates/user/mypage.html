@@ -18,7 +18,29 @@
     <hr>
 
     <div class="my-post-list">
-        
+        <h3> 내가 작성한 게시물 </h3>
+        {% if my_posts %}
+            <ul>
+                {% for post in my_posts %}
+                    <li>
+                        <strong>{{ post.title }}</strong>
+                        <br>
+                        작성 내용: {{ post.content|truncatewords:20 }}
+                        <br>
+                        조회수: {{ post.views }}
+                        <br>
+                        기술 스택: {{ post.tech_stack }}
+                        <br>
+                        <a href="{% url 'article_detail' post.id %}">게시물 보러가기</a>
+
+                        <hr>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p> 아직 작성한 게시물이 없습니다. </p>
+            <button type="button" onclick="location.href='{% url 'article_create' %}'">게시물 작성하기</button>
+        {% endif %}
     </div>
         
     {% if messages %}
