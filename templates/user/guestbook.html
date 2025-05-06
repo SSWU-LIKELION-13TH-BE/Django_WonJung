@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ owner.nickname }}님의 방명록</title>
+</head>
+<body>
+    <h2>{{ owner.nickname }}님의 방명록</h2>
+
+    <!-- 방명록 작성 폼 -->
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">방명록 남기기</button>
+    </form>
+
+    <button type="button" onclick="location.href='{% url 'main' %}'">메인으로</button>
+</body>
+</html>

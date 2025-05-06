@@ -1,7 +1,8 @@
 from encodings.punycode import T
+from turtle import width
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import CustomUser
+from .models import CustomUser, Guestbook
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)     # e-mail 필수
@@ -40,3 +41,16 @@ class UserUpdateForm(forms.ModelForm):
             user.save()
         
         return user
+
+# 방명록 작성
+class GuestbookForm(forms.ModelForm):
+    class Meta:
+        model = Guestbook
+        fields = ['message']
+        widgets = {
+            'message': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': '방명록을 작성하세요.'
+            })
+        }
+        labels = { 'message' : '내용'}
