@@ -11,6 +11,10 @@ urlpatterns = [
 
     path('change_password/', change_password_view, name='change_password'),
 
+    path('mypage/', mypage_view, name='mypage'),
+    path('edit_profile/', edit_profile_view, name='edit_profile'),
+
+
     # 비밀번호 재설정
     # 템플릿 오버라이딩 추가
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='user/password_reset.html'), name='password_reset'),

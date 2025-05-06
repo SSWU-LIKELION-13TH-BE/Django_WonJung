@@ -7,8 +7,8 @@
 <body>
     <h2>메인 페이지</h2>
     {% if user.is_authenticated %}
+        <button type="button" onclick="location.href='{% url 'mypage' %}'">마이페이지</button> 
         <button type="button" onclick="location.href='{% url 'login' %}'">로그아웃</button>
-        <button type="button" onclick="location.href='{% url 'change_password' %}'">비밀번호 변경</button>
         <button type="button" onclick="location.href='{% url 'article_create' %}'">게시물 작성하기</button>
         <button type="button" onclick="location.href='{% url 'article_list' %}'">게시물 리스트 보기</button>
     {% else %}

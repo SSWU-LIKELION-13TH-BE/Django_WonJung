@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이 페이지</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="header">
+
+        <h2>마이 페이지</h2>
+        <div class="button-group">
+        <button type="button" onclick="location.href='{% url 'change_password' %}'">비밀번호 변경</button>
+        <button type="button" onclick="location.href='{% url 'edit_profile' %}">회원 정보 수정</button>
+    </div>
+
+    <hr>
+
+    <div class="my-post-list">
+        
+    </div>
+        
+    {% if messages %}
+        <script>
+            {% for message in messages %}
+                alert('{{ message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</body>
+</html>

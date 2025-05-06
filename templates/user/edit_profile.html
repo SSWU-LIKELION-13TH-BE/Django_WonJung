@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 수정</title>
+</head>
+<body>
+    <h2>회원 정보 수정</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">비밀번호 변경하기</button>
+    </form>
+
+    <button type="button" onclick="location.href='{% url 'main' %}'">메인으로</button>
+
+</body>
+</html>

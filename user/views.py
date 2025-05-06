@@ -49,3 +49,9 @@ def change_password_view(request):
         form = PasswordChangeForm(request.user)
     
     return render(request, 'user/change_password.html', {'form' : form})
+
+def mypage_view(request):
+    return render(request, 'user/mypage.html')
+
+def edit_profile_view(request):
+    return render(request, 'user/edit_profile.html')
