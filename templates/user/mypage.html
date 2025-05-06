@@ -22,19 +22,27 @@
         {% if my_posts %}
             <ul>
                 {% for post in my_posts %}
-                    <li>
-                        <strong>{{ post.title }}</strong>
-                        <br>
-                        작성 내용: {{ post.content|truncatewords:20 }}
-                        <br>
-                        조회수: {{ post.views }}
-                        <br>
-                        기술 스택: {{ post.tech_stack }}
-                        <br>
-                        <a href="{% url 'article_detail' post.id %}">게시물 보러가기</a>
+                    <li class="post-item">
+                        <div class="post-content">
+                            <strong>{{ post.title }}</strong>
+                            <br>
+                            작성 내용: {{ post.content|truncatewords:20 }}
+                            <br>
+                            조회수: {{ post.views }}
+                            <br>
+                            기술 스택: {{ post.tech_stack }}
+                            <br>
+                            <a href="{% url 'article_detail' post.id %}">게시물 보러가기</a>
+                        </div>
 
-                        <hr>
+                        <div class="edit-delete-button">
+                            <button onclick="location.href='{% url 'article_edit' post.pk %}'">수정</button>
+                        </div>
+
                     </li>
+
+                    <hr>
+
                 {% endfor %}
             </ul>
         {% else %}
