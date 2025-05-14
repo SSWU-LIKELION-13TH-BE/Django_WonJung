@@ -25,6 +25,7 @@ urlpatterns = [
     path('user/', include('user.urls')),        # users 앱 URL 연결
     path('post/', include('post.urls')),        # posts 앱 URL 연결
     path('', main_view, name='main'),
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

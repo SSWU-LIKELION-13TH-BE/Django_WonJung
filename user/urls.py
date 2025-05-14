@@ -23,5 +23,12 @@ urlpatterns = [
     path('password_reset_confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='user/password_reset_confirm.html'), 
          name='password_reset_confirm'),
     path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view(template_name='user/password_reset_complete.html'), name='password_reset_complete'),
+
+    # 소셜 로그인
+    path('accounts/naver/login/', naver_login_view, name='naver_login'),
+    path('accounts/naver/callback/', naver_callback_view, name='naver_callback'),
+
+    path('kakao/login/', kakao_login_view, name='kakao_login'),
+    path('kakao/callback/', kakao_callback_view, name='kakao_callback'),
     
 ]

@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractUser, Group, Permission, BaseUserManager
 from django.db import models
 
 from myproject import settings
@@ -10,13 +10,19 @@ class CustomUser(AbstractUser):
     nickname = models.CharField(max_length=15, blank = False, null = False, default='')
     id = models.CharField(max_length=15, blank=False, null = False, primary_key=True)
     username = None
+    email = models.EmailField(unique=True, blank=False, null=False)  # 이메일을 유일하게 설정
 
     groups = models.ManyToManyField(Group, related_name = "customer_set", blank = True)
     user_permissions = models.ManyToManyField(Permission, related_name="customer_permission_set", blank=True)
 
     # week2 과제 - id를 primary key로 설정함
-    USERNAME_FIELD = 'id'
-    REQUIRED_FIELDS = 'nickname', 'email'
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nickname']
+
+    # 네이버 소셜 로그인
+    naver_id = models.CharField(max_length=255, null= True)
+    # 카카오 소셜 로그인
+    kakao_id = models.CharField(max_length=255, unique=True, null= True)
 
 class Guestbook(models.Model):
     # 방명록을 받은 유저 (사용자 본인)

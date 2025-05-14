@@ -11,12 +11,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import sys
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+sys.path.append(str(BASE_DIR))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -39,11 +40,33 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",          # 멀티 사이트 지원
 
     # 생성한 앱 이름 추가
     "user",
-    "post"      # week03
+    "post",      # week03
+
+    # 소셜 로그인 구현
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.naver",
+    "allauth.socialaccount.providers.kakao",
 ]
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/main/'        # 로그인 후 리다이렉트할 페이지 주소
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_ERROR_URL = '/accounts/login/'
+
+AUTHENTICATION_BACKENDS = (
+    # 장고에서 사용자의 이름을 기준으로 로그인하도록 설정
+    "django.contrib.auth.backends.ModelBackend",
+
+    # allauth의 인증 방식 추가
+    "allauth.account.auth_backends.AuthenticationBackend"
+)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -53,6 +76,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",         # 소셜 로그인
 ]
 
 ROOT_URLCONF = "myproject.urls"
@@ -117,14 +141,14 @@ USE_I18N = True
 USE_L10N = True
 
 # USE_TZ = True
-USE_TZ = False  # False 로 설정해야 DB에 변경 된 TIME_ZONE 이 반영 됨 
+USE_TZ = False  # False 로 설정해야 DB에 변경된 TIME_ZONE 이 반영 됨 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 import os
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # ✅ 당신 구조에 딱 맞는 설정
+    BASE_DIR / "static"
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -150,3 +174,42 @@ EMAIL_USE_LOCALTIME = True
 # 게시판 사진 등록
 MEDIA_URL= '/media/'
 MEDIA_ROOT= BASE_DIR / 'media'
+
+
+NAVER_CLIENT_ID = config.NAVER_CLIENT_ID
+NAVER_CLIENT_SECRET = config.NAVER_CLIENT_SECRET
+KAKAO_CLIENT_ID = config.KAKAO_CLIENT_ID
+
+# 소셜 로그인
+SOCIALACCCOUNT_PROVIDERS={
+
+    # 네이버 설정
+    "naver": {
+        "APP" : {
+            "client_id" : NAVER_CLIENT_ID,
+            "secret" :NAVER_CLIENT_SECRET,
+            "key" : ""
+        },
+        # scope의 경우 내가 어떤 데이터를 가져올 건지를 선택
+        # 사이트마다 제공하는 값이 다르기 때문에 가져올 데이터를 설정한 이후 추가/삭제
+        # SCOPE값에 제공하지 않는 값을 넣거나 하는 이유로 오류가 나올 수 있음
+        "SCOPE": ['name', 'email', 'nickname'],
+
+        "AUTH_PARAMS" : {
+            "access_type" : "online",
+            "prompt" : "select_account",
+        },
+    },
+
+    'kakao': {
+        'APP': {
+            'client_id': KAKAO_CLIENT_ID,
+            'key': ''
+        },
+        'REDIRECT_URI': 'http://localhost:8000/accounts/kakao/login/callback/',
+        'SCOPE': [
+            'account_email',
+            'profile'
+        ]
+    }
+}
